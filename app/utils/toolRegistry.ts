@@ -31,14 +31,34 @@ return \`Characters: \${chars}\\nLines: \${lines}\`;`
   {
     id: 'props-to-json',
     name: 'Properties to Json',
-    description: 'Convert "key: value" lines to JSON.',
+    description: 'Convert "key=value" lines to JSON.',
     code: `const obj = {};
-input.split('\\n').forEach(line => {
-  const [key, ...rest] = line.split(':');
-  if (key && rest.length > 0) {
-    obj[key.trim()] = rest.join(':').trim();
-  }
-});
+const lines = input.split('\\n');
+for (const line of lines) {
+    const trimmedLine = line.trim();
+    if (!trimmedLine || trimmedLine.startsWith('#')) continue;
+
+    let separatorIndex = trimmedLine.indexOf('=');
+    if (separatorIndex === -1) separatorIndex = trimmedLine.indexOf(':');
+    
+    if (separatorIndex !== -1) {
+        const key = trimmedLine.substring(0, separatorIndex).trim();
+        const value = trimmedLine.substring(separatorIndex + 1).trim();
+        
+        const keyParts = key.split('.');
+        let current = obj;
+        
+        for (let i = 0; i < keyParts.length - 1; i++) {
+            const part = keyParts[i];
+            if (!current[part] || typeof current[part] !== 'object') {
+                current[part] = {};
+            }
+            current = current[part];
+        }
+        
+        current[keyParts[keyParts.length - 1]] = value;
+    }
+}
 return JSON.stringify(obj, null, 2);`
   }
 ];

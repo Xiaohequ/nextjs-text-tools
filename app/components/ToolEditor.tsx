@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Tool } from '../utils/toolRegistry';
+import Editor from 'react-simple-code-editor';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism-coy.css';
 
 interface ToolEditorProps {
     isOpen: boolean;
@@ -84,12 +88,16 @@ const ToolEditor: React.FC<ToolEditorProps> = ({ isOpen, onClose, onSave, onDele
                             JavaScript Code
                             <span className="ml-2 text-xs text-gray-500 font-normal">(available variable: <code>input</code>)</span>
                         </label>
-                        <textarea
-                            value={code}
-                            onChange={(e) => setCode(e.target.value)}
-                            className="w-full h-64 p-4 bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            spellCheck={false}
-                        />
+                        <div className="border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500">
+                            <Editor
+                                value={code}
+                                onValueChange={code => setCode(code)}
+                                highlight={code => Prism.highlight(code, Prism.languages.javascript, 'javascript')}
+                                padding={16}
+                                className="font-mono text-sm bg-gray-50 dark:bg-gray-950 min-h-[16rem]"
+                                textareaClassName="focus:outline-none"
+                            />
+                        </div>
                     </div>
                 </div>
 

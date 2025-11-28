@@ -41,13 +41,36 @@ const TextProcessor: React.FC = () => {
         setIsEditorOpen(true);
     };
 
+    const handleCloneTool = (tool: Tool) => {
+        const clonedTool: Tool = {
+            ...tool,
+            id: '', // Reset ID to create a new tool
+            name: `${tool.name} (Copy)`,
+            isCustom: true
+        };
+        setEditingTool(clonedTool);
+        setIsEditorOpen(true);
+    };
+
     return (
         <div className="w-full max-w-6xl mx-auto px-4 py-12">
-            <div className="text-center mb-12">
-                <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 mb-4">
-                    Text Tools
-                </h1>
-                <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            <div className="relative text-center mb-16 pt-8">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -z-10" />
+
+                <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-6">
+                    <div className="relative group">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full opacity-75 group-hover:opacity-100 blur transition duration-1000 group-hover:duration-200" />
+                        <div className="relative bg-white dark:bg-gray-900 rounded-full p-4 ring-1 ring-gray-900/5 dark:ring-white/10">
+                            <img src="/logo.png" alt="Text Tools Logo" className="w-16 h-16 md:w-20 md:h-20 object-contain" />
+                        </div>
+                    </div>
+
+                    <h1 className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 tracking-tight">
+                        Text Tools
+                    </h1>
+                </div>
+
+                <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
                     Transform your text instantly with our powerful tools, or create your own custom text processors using JavaScript.
                 </p>
             </div>
@@ -68,6 +91,7 @@ const TextProcessor: React.FC = () => {
                 tools={tools}
                 onToolSelect={handleToolSelect}
                 onEditTool={openEditor}
+                onCloneTool={handleCloneTool}
             />
 
             <ResultModal
