@@ -60,6 +60,89 @@ for (const line of lines) {
     }
 }
 return JSON.stringify(obj, null, 2);`
+  },
+  {
+    id: 'json-minimizer',
+    name: 'JSON Minimizer',
+    description: 'Minify JSON by removing unnecessary whitespace.',
+    code: `try {
+  const parsed = JSON.parse(input);
+  return JSON.stringify(parsed);
+} catch (error) {
+  return 'Error: Invalid JSON - ' + error.message;
+}`
+  },
+  {
+    id: 'json-to-csv',
+    name: 'JSON to CSV',
+    description: 'Convert JSON array to CSV (tab-separated).',
+    code: `try {
+  const data = JSON.parse(input);
+  
+  if (!Array.isArray(data) || data.length === 0) {
+    return 'Error: Input must be a non-empty JSON array';
+  }
+  
+  // Get all unique keys from all objects
+  const keys = [...new Set(data.flatMap(obj => Object.keys(obj)))];
+  
+  // Create header row
+  const header = keys.join('\\t');
+  
+  // Create data rows
+  const rows = data.map(obj => {
+    return keys.map(key => {
+      const value = obj[key];
+      if (value === null || value === undefined) return '';
+      // Convert value to string and preserve actual newlines
+      return String(value);
+    }).join('\\t');
+  });
+  
+  return [header, ...rows].join('\\n');
+} catch (error) {
+  return 'Error: Invalid JSON - ' + error.message;
+}`
+  },
+  {
+    id: 'csv-to-json',
+    name: 'CSV to JSON',
+    description: 'Convert CSV (tab-separated) to JSON array.',
+    code: `try {
+  const lines = input.trim().split('\\n');
+  
+  if (lines.length < 2) {
+    return 'Error: CSV must have at least a header row and one data row';
+  }
+  
+  // Parse header row
+  const headers = lines[0].split('\\t');
+  
+  // Parse data rows
+  const result = [];
+  for (let i = 1; i < lines.length; i++) {
+    const values = lines[i].split('\\t');
+    const obj = {};
+    
+    headers.forEach((header, index) => {
+      const value = values[index] || '';
+      // Try to parse as number if possible
+      if (value === '') {
+        obj[header] = '';
+      } else if (!isNaN(value) && value.trim() !== '') {
+        obj[header] = Number(value);
+      } else {
+        obj[header] = value;
+      }
+    });
+    
+    result.push(obj);
+  }
+  
+  return JSON.stringify(result, null, 2);
+} catch (error) {
+  return 'Error: ' + error.message;
+}`
   }
 ];
 
