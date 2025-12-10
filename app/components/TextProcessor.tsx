@@ -5,6 +5,7 @@ import { Tool, DEFAULT_TOOLS, loadCustomTools, saveCustomTool, deleteCustomTool,
 import ToolGrid from './ToolGrid';
 import ResultModal from './ResultModal';
 import ToolEditor from './ToolEditor';
+import GoogleAdSense from './GoogleAdSense';
 
 const TextProcessor: React.FC = () => {
     const [inputText, setInputText] = useState('');
@@ -85,6 +86,10 @@ const TextProcessor: React.FC = () => {
                     placeholder="Paste your text here..."
                     className="w-full h-64 p-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 font-mono text-sm"
                 />
+            </div>
+
+            <div className="block lg:hidden my-6">
+                <GoogleAdSense slot="1234567890" />
             </div>
 
             <ToolGrid
